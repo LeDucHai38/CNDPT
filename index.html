@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Louvre Museum | Clone</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           1. RESET & GLOBAL STYLES
+           ========================================= */
+        :root {
+            --font-ui: 'Montserrat', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+            --color-white: #ffffff;
+            --color-black: #111111;
+            --color-bg-dark: #000000;
+            --color-gold: #c6a76f;
+            /* Accent color */
+            --color-gray: #f0f0f0;
+            --transition: all 0.4s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            color: var(--color-black);
+            background-color: var(--color-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Utility Classes */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* =========================================
+           2. HEADER
+           ========================================= */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: var(--transition);
+            color: var(--color-white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Default on Hero */
+        }
+
+        /* State: Scrolled (White Background) */
+        .site-header.scrolled {
+            background-color: rgba(255, 255, 255, 0.98);
+            color: var(--color-black);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 10px 0;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+
+            /* QUAN TRỌNG: Giới hạn chiều rộng giống container phía dưới */
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 40px;
+            /* Padding trái phải để không dính sát lề */
+        }
+
+        /* Left: Controls */
+        .header-left {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        /* Center: Logo */
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .logo {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        /* Right: Utilities & CTA */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .btn-ticket {
+            background-color: var(--color-gold);
+            color: var(--color-white) !important;
+            padding: 10px 24px;
+            border-radius: 2px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.75rem;
+        }
+
+        .btn-ticket:hover {
+            background-color: #b0925e;
+        }
+
+        /* Sub-nav */
+        .sub-nav {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 1;
+            transition: var(--transition);
+
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        .site-header.scrolled .sub-nav {
+            /* Hide subnav on scroll to save space, standard pattern */
+            margin-top: 0;
+            height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        /* =========================================
+           3. HERO SECTION
+           ========================================= */
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--color-white);
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: -2;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            /* Darken video */
+            z-index: -1;
+        }
+
+        .hero-content {
+            z-index: 1;
+            max-width: 800px;
+            padding: 0 20px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero-status {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn-hero {
+            padding: 15px 35px;
+            border: 1px solid var(--color-white);
+            color: var(--color-white);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            transition: var(--transition);
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .btn-hero:hover {
+            background: var(--color-white);
+            color: var(--color-black);
+        }
+
+        /* =========================================
+           4. INFO BAR
+           ========================================= */
+        .info-bar {
+            background-color: #F8F5F2;
+            /* Cream color */
+            padding: 15px 0;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--color-black);
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-bar strong {
+            font-weight: 600;
+        }
+
+        /* =========================================
+           5. HIGHLIGHTS SECTION
+           ========================================= */
+        .section-highlights {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            margin-bottom: 40px;
+            padding-left: 40px;
+            /* Align with container */
+        }
+
+        .cards-container {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            padding: 10px 40px 40px 40px;
+            /* Padding for scrollbar & shadow */
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .cards-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .card {
+            min-width: 350px;
+            cursor: pointer;
+        }
+
+        .card-image-wrapper {
+            width: 100%;
+            height: 250px;
+            /* 16:9 approx aspect */
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .card-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .card:hover .card-image-wrapper img {
+            transform: scale(1.08);
+        }
+
+        .card-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .card-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .card-date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* =========================================
+           6. LOUVRE+ (Multimedia)
+           ========================================= */
+        .section-louvre-plus {
+            background-color: var(--color-black);
+            color: var(--color-white);
+            padding: 80px 0;
+        }
+
+        .lp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+            padding: 0 40px;
+        }
+
+        .lp-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+            padding: 0 40px;
+        }
+
+        .main-video-card {
+            position: relative;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 400px;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .video-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+
+        .play-btn {
+            position: absolute;
+            font-size: 4rem;
+            color: white;
+            opacity: 0.9;
+            transition: 0.3s;
+        }
+
+        .main-video-card:hover .play-btn {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .side-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .side-item {
+            display: flex;
+            gap: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .side-item:last-child {
+            border-bottom: none;
+        }
+
+        .side-thumb {
+            width: 120px;
+            height: 80px;
+            background: #444;
+            object-fit: cover;
+        }
+
+        .side-content h4 {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .side-content span {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        /* =========================================
+           7. FOOTER
+           ========================================= */
+        .site-footer {
+            background-color: var(--color-bg-dark);
+            color: var(--color-white);
+            padding: 80px 40px 40px 40px;
+            font-size: 0.9rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 40px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 60px;
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .footer-col h4 {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--color-gold);
+        }
+
+        .newsletter-form input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #fff;
+            color: white;
+            padding: 10px 0;
+            width: 100%;
+            margin-bottom: 15px;
+            font-family: var(--font-ui);
+        }
+
+        .newsletter-form button {
+            background: white;
+            color: black;
+            border: none;
+            padding: 8px 20px;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        /* =========================================
+           RESPONSIVE (Mobile & Tablet)
+           ========================================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .header-right span,
+            .sub-nav {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-inner {
+                padding: 0 20px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .btn-ticket {
+                padding: 8px 12px;
+                font-size: 0.7rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-hero {
+                width: 100%;
+            }
+
+            .lp-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .container,
+            .section-title,
+            .cards-container,
+            .lp-header,
+            .lp-grid,
+            .site-footer {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+
+
+
+        /* =========================================
+           STICKY FOOTER BAR (Thanh đen dưới cùng)
+           ========================================= */
+        .sticky-footer-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #111111;
+            color: #ffffff;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 9999;
+            border-top: 1px solid #333;
+        }
+
+        .footer-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.85rem;
+            font-family: var(--font-ui);
+        }
+
+        .fb-title {
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .fb-divider {
+            color: #555;
+            font-weight: 300;
+        }
+
+        .footer-bar-right {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Nút xanh */
+        .btn-footer-green {
+            background-color: #008770;
+            /* Màu xanh đặc trưng Louvre */
+            color: white !important;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-footer-green:hover {
+            background-color: #006e5b;
+        }
+
+        /* Nút trắng */
+        .btn-footer-white {
+            background-color: #ffffff;
+            color: black !important;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Responsive chỉnh lại Grid cho mobile */
+        @media (max-width: 1024px) {
+            .louvre-mosaic {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .item-big-center,
+            .item-horizontal {
+                grid-column: span 2;
+            }
+
+            .item-vertical {
+                grid-row: span 1;
+                /* Reset lại chiều cao trên tablet */
+                height: 300px;
+            }
+
+            .sticky-footer-bar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .fb-hours,
+            .fb-divider {
+                display: none;
+                /* Ẩn giờ mở cửa trên mobile cho đỡ chật */
+            }
+        }
+
+        @media (max-width: 600px) {
+            .delve-title-large {
+                font-size: 2.5rem;
+            }
+
+            .louvre-mosaic {
+                grid-template-columns: 1fr;
+                /* 1 cột duy nhất */
+                grid-auto-rows: auto;
+            }
+
+            .mosaic-item {
+                height: 300px;
+                /* Chiều cao cố định mobile */
+            }
+
+            .item-big-center,
+            .item-horizontal,
+            .item-vertical {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+        }
+
+
+        /* =========================================
+   DELVE STYLE: RECTANGLE MASK & FADE
+   ========================================= */
+        .section-delve-fixed {
+            background-color: #000000;
+            padding: 80px 40px 100px 40px;
+            color: #ffffff;
+        }
+
+        .delve-header {
+            margin-bottom: 40px;
+        }
+
+        .delve-title {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            text-transform: uppercase;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        /* --- KHUNG CHỨA HÌNH CHỮ NHẬT CỐ ĐỊNH --- */
+        .delve-mask-container {
+            /* Đặt chiều cao cố định cho cả khối ảnh */
+            height: 600px;
+
+            /* Cắt bỏ mọi thứ vượt quá chiều cao này */
+            overflow: hidden;
+
+            position: relative;
+            /* Để định vị lớp phủ mờ */
+            margin-bottom: 40px;
+            /* Khoảng cách với nút Explore */
+        }
+
+        /* Grid bên trong (Vẫn dùng Flexbox 3 cột) */
+        .delve-grid-inner {
+            display: flex;
+            gap: 20px;
+        }
+
+        .grid-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .grid-item img {
+            width: 100%;
+            display: block;
+            border-radius: 2px;
+        }
+
+        /* --- HIỆU ỨNG MỜ DẦN (FADE OUT) --- */
+        .bottom-fade-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            /* Độ cao của vùng mờ */
+
+            /* Gradient từ trong suốt sang đen */
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #000000 100%);
+
+            pointer-events: none;
+            /* Để vẫn click được vào phần ảnh bên dưới lớp mờ (nếu cần) */
+            z-index: 5;
+        }
+
+        /* --- NÚT EXPLORE CUỐI CÙNG --- */
+        .explore-footer {
+            text-align: center;
+            border-top: 1px solid #333;
+            /* Đường kẻ mờ ngăn cách (tùy chọn) */
+            padding-top: 40px;
+        }
+
+        .btn-explore-pill {
+            display: inline-block;
+            background-color: #ffffff;
+            color: #000000;
+            padding: 12px 45px;
+            border-radius: 50px;
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-explore-pill:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .delve-mask-container {
+                height: auto;
+                /* Trên mobile thì bỏ giới hạn chiều cao để xem hết */
+                overflow: visible;
+            }
+
+            .delve-grid-inner {
+                flex-direction: column;
+            }
+
+            .bottom-fade-overlay {
+                display: none;
+                /* Ẩn hiệu ứng mờ trên mobile */
+            }
+        }
+
+        /* --- HIỆU ỨNG HOVER (DI CHUỘT VÀO) --- */
+
+        /* 1. Khung của từng ảnh */
+        .grid-item {
+            position: relative;
+            border-radius: 2px;
+            overflow: hidden;
+            /* QUAN TRỌNG: Để khi ảnh phóng to không bị tràn ra ngoài khung */
+            cursor: pointer;
+            /* Đổi con trỏ chuột thành bàn tay */
+        }
+
+        /* 2. Thiết lập cho ảnh gốc */
+        .grid-item img {
+            width: 100%;
+            display: block;
+
+            /* Hiệu ứng chuyển động */
+            /* 0.6s: Thời gian zoom (chậm rãi) */
+            /* cubic-bezier: Giúp chuyển động mượt mà, không bị cứng */
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s ease;
+
+            /* Mặc định hơi tối đi 1 chút để khi hover sáng lên sẽ đẹp hơn (tùy chọn) */
+            filter: brightness(0.95);
+        }
+
+        /* 3. Hành động khi di chuột vào (Hover) */
+        .grid-item:hover img {
+            /* Phóng to ảnh lên 5% */
+            transform: scale(1.05);
+
+            /* Làm sáng ảnh lên */
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="site-header" id="siteHeader">
+        <div class="header-inner">
+            <div class="header-left">
+                <div class="icon-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+                <div class="icon-btn"><i class="fas fa-search"></i></div>
+            </div>
+
+            <div class="header-center">
+                <a href="#" class="logo">Louvre</a>
+            </div>
+
+            <div class="header-right">
+                <span class="lang">EN</span>
+                <span>Online Boutique</span>
+                <a href="#" class="btn-ticket">Tickets</a>
+            </div>
+        </div>
+
+        <nav class="sub-nav">
+            <a href="#">Visit</a>
+            <a href="#">Exhibitions and Events</a>
+            <a href="#">Explore</a>
+            <a href="#">Learning</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <video class="hero-video" autoplay muted loop playsinline
+                poster="https://images.unsplash.com/photo-1544893706-e74f26620593?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80">
+                <source
+                    src="D:\CNDPT\Museum_Showcase_Video_Creation.mp4"
+                    type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to the Louvre</h1>
+                <p class="hero-status"><i class="far fa-clock"></i> The museum is open today, 9 a.m. to 6 p.m.</p>
+                <div class="hero-buttons">
+                    <button class="btn-hero">Book a Ticket</button>
+                    <button class="btn-hero">Prepare your visit</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="info-bar">
+            <p><strong>Opening Hours:</strong> Monday, Thursday, Saturday, Sunday: 9 a.m.–6 p.m. | Friday: 9 a.m.–9:45
+                p.m.</p>
+        </div>
+
+        <section class="section-highlights">
+            <h2 class="section-title">Highlights</h2>
+            <div class="cards-container">
+                <article class="card">
+                    <div class="card-image-wrapper">
+                        <img src="abc.jpg" alt="Mona Lisa">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-tag">Exhibition</div>
+                        <h3 class="card-title">Naples in Paris</h3>
+                        <p class="card-date">Until Jan 08, 2024</p>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-image-wrapper">
+                        <img src="abc.jpg" alt="Statue">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-tag">Event</div>
+                        <h3 class="card-title">Treasures of the Oasis</h3>
+                        <p class="card-date">Until Feb 20, 2024</p>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-image-wrapper">
+                        <img src="abc.jpg" alt="Painting">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-tag">News</div>
+                        <h3 class="card-title">Restoration of the Apollo Gallery</h3>
+                        <p class="card-date">Permanent Collection</p>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-image-wrapper">
+                        <img src="abc.jpg" alt="Architecture">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-tag">Guided Tour</div>
+                        <h3 class="card-title">Welcome to the Museum</h3>
+                        <p class="card-date">Every day</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section-louvre-plus">
+            <div class="lp-header">
+                <h2 class="section-title" style="padding-left:0; color:white; margin:0">Louvre+</h2>
+                <a href="#" style="border-bottom: 1px solid white;">More content on Louvre+</a>
+            </div>
+
+            <div class="lp-grid">
+                <div class="main-video-card">
+                    <div class="video-placeholder">
+                        <img src="abc.jpg" alt="Video thumb">
+                        <i class="fas fa-play-circle play-btn"></i>
+                    </div>
+                    <div class="lp-info" style="margin-top:15px">
+                        <h3 style="font-family: var(--font-serif); font-size: 1.5rem;">The Art of Conservation</h3>
+                    </div>
+                </div>
+
+                <div class="side-list">
+                    <div class="side-item">
+                        <img src="abc.jpg" class="side-thumb" alt="Thumb">
+                        <div class="side-content">
+                            <h4>Secrets of the Sphinx</h4>
+                            <span>Documentary • 45 min</span>
+                        </div>
+                    </div>
+                    <div class="side-item">
+                        <img src="abc.jpg" class="side-thumb" alt="Thumb">
+                        <div class="side-content">
+                            <h4>A Night at the Museum</h4>
+                            <span>Virtual Tour • 12 min</span>
+                        </div>
+                    </div>
+                    <div class="side-item">
+                        <img src="abc.jpg" class="side-thumb" alt="Thumb">
+                        <div class="side-content">
+                            <h4>Da Vinci's Techniques</h4>
+                            <span>Masterclass • 30 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section-delve-fixed">
+            <div class="container-fluid">
+                <div class="delve-header">
+                    <h2 class="delve-title">DELVE INTO THE LOUVRE</h2>
+                </div>
+
+                <div class="delve-mask-container">
+
+                    <div class="delve-grid-inner">
+
+                        <div class="grid-column">
+                            <div class="grid-item"><img src="c.jpg" alt="Img 1"></div>
+                            <div class="grid-item"><img src="abc.jpg" alt="Img 2"></div>
+                        </div>
+
+                        <div class="grid-column">
+                            <div class="grid-item"><img src="aaaa.png" alt="Img 3"></div>
+                            <div class="grid-item"><img src="abc.jpg" alt="Mona Lisa"></div>
+                        </div>
+
+                        <div class="grid-column">
+                            <div class="grid-item"><img src="abc.jpg" alt="Img 5"></div>
+                            <div class="grid-item"><img src="c.jpg" alt="Img 6"></div>
+                            <div class="grid-item"><img src="abc.jpg" alt="Img 7"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="bottom-fade-overlay"></div>
+                </div>
+
+                <div class="explore-footer">
+                    <a href="#" class="btn-explore-pill">Explore</a>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="sticky-footer-bar">
+            <div class="footer-bar-left">
+                <span class="fb-title">WELCOME TO THE LOUVRE</span>
+                <span class="fb-divider">|</span>
+                <span class="fb-hours">The museum is open today &nbsp; 9:00 AM <i class="fas fa-arrow-right"
+                        style="font-size:10px; margin:0 5px;"></i> 6:00 PM</span>
+            </div>
+            <div class="footer-bar-right">
+                <a href="#" class="btn-footer-green"><i class="fas fa-ticket-alt"></i> Book a ticket</a>
+                <a href="#" class="btn-footer-white"><i class="fas fa-info-circle"></i> Prepare your visit</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">LOUVRE</div>
+                <p style="color:#888; margin-bottom: 20px;">Musée du Louvre<br>75001 Paris, France</p>
+                <div style="font-size: 1.2rem; display: flex; gap:15px;">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address">
+                    <button type="button">Subscribe</button>
+                </form>
+            </div>
+            <div class="footer-col">
+                <h4>The Museum</h4>
+                <ul>
+                    <li><a href="#">History</a></li>
+                    <li><a href="#">Collections</a></li>
+                    <li><a href="#">Departments</a></li>
+                    <li><a href="#">Research</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Help & Contact</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Jobs</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2023 Musée du Louvre. All rights reserved. Clone by Senior Dev.
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const header = document.getElementById('siteHeader');
+
+        // 1. Handle Scroll Effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // 2. Mobile Menu Logic (Simple Toggle)
+        function toggleMenu() {
+            alert("This triggers the full-screen mobile menu overlay (UI pattern often used in museums).");
+        }
+
+        // 3. Init Animation (Optional)
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("Louvre Clone Loaded Successfully");
+        });
+    </script>
+</body>
+
+</html>
